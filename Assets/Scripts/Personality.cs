@@ -8,13 +8,21 @@ using UnityEngine.Events;
 
 public enum PersonalityType
 {
+    [XmlEnum(Name = "inside")]
     Inside,
+    [XmlEnum(Name = "outside")]
     Outside,
+    [XmlEnum(Name = "logic")]
     Logic,
+    [XmlEnum(Name = "passion")]
     Passion,
+    [XmlEnum(Name = "moral")]
     Moral,
+    [XmlEnum(Name = "unethic")]
     Unethic,
+    [XmlEnum(Name = "detour")]
     Detour,
+    [XmlEnum(Name = "strong")]
     Strong
 }
 

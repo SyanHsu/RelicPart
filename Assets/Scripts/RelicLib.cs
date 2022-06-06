@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,9 +10,9 @@ public class RelicLib : IRelicLib
 
     public RelicLib() { }
 
-    public RelicLib(List<RelicInfo> relicInfos) : this()
+    public RelicLib(RelicLibInfo relicLibInfo) : this()
     {
-        relics = relicInfos.ConvertAll(x => new Relic(x));
+        relics = relicLibInfo.relics.ConvertAll(x => new Relic(x));
         ResetRelics();
     }
 
@@ -95,7 +94,6 @@ public class RelicLib : IRelicLib
             }
             return outRelics;
         }
-        
         while (outRelics.Count < 3)
         {
             Relic relic = null;
@@ -104,7 +102,7 @@ public class RelicLib : IRelicLib
             foreach (var aimingType in aimingTypes)
             {
                 counter += personality[aimingType];
-                if (random <= counter)
+                if (random < counter)
                 {
                     int index = PersonalityTypeToIndex(aimingType);
                     if (Random.Range(0, 100) < normalWeight)
@@ -123,25 +121,65 @@ public class RelicLib : IRelicLib
             }
             if (relic != null && !outRelics.Contains(relic))
             {
+                //Debug.Log("Current Name:" + relic.relicInfo.Name);
+                //Debug.Log("Names:");
+                //foreach (var item in outRelics)
+                //{
+                //    Debug.Log(item.relicInfo.Name);
+                //}
                 outRelics.Add(relic);
             }
+        }
+        Debug.Log("Names:");
+        foreach (var item in outRelics)
+        {
+            Debug.Log(item.relicInfo.Name);
         }
         return outRelics;
     }
 
+    //public bool ContainsRelic(Relic relic)
+    //{
+    //    int index = PersonalityTypeToIndex(relic.relicInfo.Category);
+    //    if (relic.relicInfo.Rarity == 0)
+    //    {
+    //        if (normalRelics[index].Contains(relic)) return true;
+    //        else return false;
+    //    }
+    //    else if (relic.relicInfo.Rarity == 1)
+    //    {
+    //        if (rareRelics[index].Contains(relic)) return true;
+    //        else return false;
+    //    }
+    //    else return false;
+    //}
+
     public void AddRelic(Relic relic)
     {
+        //Debug.Log("²âÊÔ3£º" + GameManager.Instance.RelicLib.ContainsRelic(relic));
         ownedRelics.Add(relic);
         int index = PersonalityTypeToIndex(relic.relicInfo.Category);
         if (relic.relicInfo.Rarity == 0)
         {
-            if (!normalRelics[index].Contains(relic)) Debug.LogError("ÆÕÍ¨ËéÆ¬³Ø²»°üº¬¸ÃËéÆ¬");
-            else normalRelics[index].Remove(relic);
+            foreach (var item in normalRelics[index])
+            {
+                if (item.relicInfo.Name.Equals(relic.relicInfo.Name))
+                {
+                    normalRelics[index].Remove(item);
+                    break;
+                }
+            }
         }
         else if (relic.relicInfo.Rarity == 1)
         {
-            if (!rareRelics[index].Contains(relic)) Debug.LogError("Ï¡ÓÐËéÆ¬³Ø²»°üº¬¸ÃËéÆ¬");
-            else rareRelics[index].Remove(relic);
+            foreach (var item in rareRelics[index])
+            {
+                if (item.relicInfo.Name.Equals(relic.relicInfo.Name))
+                {
+                    rareRelics[index].Remove(item);
+                    break;
+                }
+            }
         }
     }
 
