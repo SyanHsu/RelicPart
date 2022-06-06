@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class SelectRelic : MonoBehaviour
 {
-    public List<Relic> relics = new List<Relic>();
-
     public GameObject selctRelicGO;
     public Transform selectLayout;
 
@@ -21,13 +19,12 @@ public class SelectRelic : MonoBehaviour
     public InputField detourInputField;
     public InputField strongInputField;
 
-    private int grade;
-    private Personality personality = new Personality();
-
     public void OnSelect()
     {
+        int grade;
+        Personality personality = new Personality();
         int tempWeight;
-        personality[PersonalityType.Logic] = personality[PersonalityType.Moral] = 
+        personality[PersonalityType.Logic] = personality[PersonalityType.Moral] =
             personality[PersonalityType.Detour] = 0;
         if (gradeInputField.text == string.Empty || !int.TryParse(gradeInputField.text, out grade))
             grade = 0;
@@ -46,33 +43,25 @@ public class SelectRelic : MonoBehaviour
 
         Debug.Log("Grade = " + grade);
         Debug.Log("Logic = " + personality[PersonalityType.Logic]);
-        Debug.Log("LogicText = " + logicInputField.text);
         Debug.Log("Passion = " + personality[PersonalityType.Passion]);
         Debug.Log("Moral = " + personality[PersonalityType.Moral]);
         Debug.Log("Unethic = " + personality[PersonalityType.Unethic]);
         Debug.Log("Detour = " + personality[PersonalityType.Detour]);
         Debug.Log("Strong = " + personality[PersonalityType.Strong]);
 
-        relics = GameManager.Instance.RelicLib.RandomChooseRelics(grade, personality);
+        List<Relic> relics = GameManager.Instance.RelicLib.RandomChooseRelics(grade, personality);
         Debug.Log("relics's count = " + relics.Count);
-        for (int i = 0; i < selectLayout.childCount; i++)
-        {
-            Destroy(selectLayout.GetChild(i).gameObject);
-        }
 
         foreach (Relic relic in relics)
         {
-            //Debug.Log(relic.relicInfo.Name);
             GameObject newSelectRelic = Instantiate<GameObject>(selctRelicGO, selectLayout);
             //Debug.Log("≤‚ ‘1£∫" + GameManager.Instance.RelicLib.ContainsRelic(relic));
-
-            selctRelicGO.GetComponent<RelicObj>().SetRelic(relic);
+            newSelectRelic.GetComponent<RelicObj>().SetRelic(relic);
         }
     }
 
     public void OnReset()
     {
-        relics.Clear();
         GameManager.Instance.RelicLib.ResetRelics();
         for (int i = 0; i < ownedContent.childCount; i++)
         {

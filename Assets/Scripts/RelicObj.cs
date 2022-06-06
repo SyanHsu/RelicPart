@@ -15,7 +15,7 @@ public class RelicObj : MonoBehaviour, IPointerClickHandler
         //Debug.Log("≤‚ ‘1£∫" + GameManager.Instance.RelicLib.ContainsRelic(this.relic));
         nameText.text = relic.relicInfo.Name;
         descText.text = relic.relicInfo.Description;
-        Debug.Log(nameText.text);
+        //Debug.Log(nameText.text);
     }
 
     public void OnPointerClick(PointerEventData eventData)
