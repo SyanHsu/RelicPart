@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.IO;
 
 public class GameManager : MonoBehaviour
@@ -8,14 +9,31 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get { return instance; } }
 
     private RelicLib relicLib;
-
     public RelicLib RelicLib { get => relicLib; }
+
+    public SelectRelicUI selectRelicUI;
+
+    public Text sanityText;
+    private int sanity;
+    public int Sanity
+    {
+        set
+        {
+            sanity = value;
+            sanityText.text = string.Format("San÷µ£∫{0:d}", sanity);
+        }
+        get
+        { 
+            return sanity;
+        }
+    }
 
     private void Awake()
     {
         if (instance == null)
         {
             instance = this;
+            Sanity = 0;
         }
         else
         {

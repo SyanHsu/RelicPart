@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SelectRelic : MonoBehaviour
+public class SelectRelicUI : MonoBehaviour
 {
     public GameObject selctRelicGO;
     public Transform selectLayout;
@@ -52,10 +52,14 @@ public class SelectRelic : MonoBehaviour
         List<Relic> relics = GameManager.Instance.RelicLib.RandomChooseRelics(grade, personality);
         Debug.Log("relics's count = " + relics.Count);
 
+        for (int i = 0; i < selectLayout.childCount; i++)
+        {
+            Destroy(selectLayout.GetChild(i).gameObject);
+        }
+
         foreach (Relic relic in relics)
         {
             GameObject newSelectRelic = Instantiate<GameObject>(selctRelicGO, selectLayout);
-            //Debug.Log("≤‚ ‘1£∫" + GameManager.Instance.RelicLib.ContainsRelic(relic));
             newSelectRelic.GetComponent<RelicObj>().SetRelic(relic);
         }
     }
@@ -71,11 +75,11 @@ public class SelectRelic : MonoBehaviour
 
     public void OnChooseRelic(Relic relic)
     {
-        //Debug.Log("≤‚ ‘2£∫" + GameManager.Instance.RelicLib.ContainsRelic(relic));
         GameManager.Instance.RelicLib.AddRelic(relic);
-        GameObject newOwnedRelic = Instantiate<GameObject>(ownedRelicGO, ownedContent);
-        newOwnedRelic.transform.Find("Name").GetComponent<Text>().text = relic.relicInfo.Name;
-        newOwnedRelic.transform.Find("Description").GetComponent<Text>().text = relic.relicInfo.Description;
+        GameObject newOwnedRelic = Instantiate(ownedRelicGO, ownedContent);
+        newOwnedRelic.GetComponent<OwnedRelicObj>().SetRelic(relic);
+        //newOwnedRelic.transform.Find("Name").GetComponent<Text>().text = relic.relicInfo.Name;
+        //newOwnedRelic.transform.Find("Description").GetComponent<Text>().text = relic.relicInfo.Description;
         if (ownedContent.childCount > 8)
         {
             RectTransform rectTransform = ownedContent.GetComponent<RectTransform>();
@@ -84,6 +88,16 @@ public class SelectRelic : MonoBehaviour
         for (int i = 0; i < selectLayout.childCount; i++)
         {
             Destroy(selectLayout.GetChild(i).gameObject);
+        }
+    }
+
+    public void OnRemoveRelic(Relic relic)
+    {
+        GameManager.Instance.RelicLib.RemoveRelic(relic);
+        if (ownedContent.childCount >= 8)
+        {
+            RectTransform rectTransform = ownedContent.GetComponent<RectTransform>();
+            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, rectTransform.rect.width - 190);
         }
     }
 }
